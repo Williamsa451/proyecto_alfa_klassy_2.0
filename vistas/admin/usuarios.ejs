@@ -1,0 +1,70 @@
+<%- include('../parciales/encabezado') %>
+
+<!-- Mensajes -->
+<% if (mensaje) { %>
+    <div class="alerta alerta-exito"><%= mensaje %></div>
+<% } %>
+<% if (error) { %>
+    <div class="alerta alerta-error"><%= error %></div>
+<% } %>
+
+<!-- Tarjeta principal -->
+<div class="tarjeta">
+    <div class="tarjeta-encabezado">
+        <h2>Lista de Usuarios</h2>
+        <a href="/admin/usuarios/crear" class="boton boton-primario boton-pequeno">
+            + Nuevo Usuario
+        </a>
+    </div>
+    <div class="tarjeta-cuerpo">
+        <% if (usuarios.length > 0) { %>
+            <div class="tabla-contenedor">
+                <table class="tabla">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Correo</th>
+                            <th>Documento</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% usuarios.forEach(function(usr) { %>
+                            <tr>
+                                <td><%= usr.nombre %></td>
+                                <td><%= usr.correo %></td>
+                                <td><%= usr.documento %></td>
+                                <td style="text-transform: capitalize;"><%= usr.rol %></td>
+                                <td>
+                                    <span class="estado <%= usr.activo ? 'estado-activo' : 'estado-inactivo' %>">
+                                        <%= usr.activo ? 'Activo' : 'Inactivo' %>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="acciones">
+                                        <a href="/admin/usuarios/editar/<%= usr._id %>" class="editar">Editar</a>
+                                        <button onclick="confirmarEliminar('¿Seguro que deseas eliminar a <%= usr.nombre %>?', '/admin/usuarios/eliminar/<%= usr._id %>')" class="eliminar">
+                                            Eliminar
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        <% } else { %>
+            <div class="sin-datos">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                </svg>
+                <p>No hay usuarios registrados</p>
+                <a href="/admin/usuarios/crear" class="boton boton-primario">Crear primer usuario</a>
+            </div>
+        <% } %>
+    </div>
+</div>
+
+<%- include('../parciales/pie') %>

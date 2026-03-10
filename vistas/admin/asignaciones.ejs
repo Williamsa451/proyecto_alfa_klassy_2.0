@@ -1,0 +1,149 @@
+<%- include('../parciales/encabezado') %>
+
+<!-- Mensajes -->
+<% if (mensaje) { %>
+    <div class="alerta alerta-exito"><%= mensaje %></div>
+<% } %>
+<% if (error) { %>
+    <div class="alerta alerta-error"><%= error %></div>
+<% } %>
+
+<!-- Tarjeta principal -->
+<div class="tarjeta">
+    <div class="tarjeta-encabezado">
+        <h2>Asignación de Docentes</h2>
+        <button onclick="abrirModal('modalCrearAsignacion')" class="boton boton-primario boton-pequeno">
+            + Nueva Asignación
+        </button>
+    </div>
+    <div class="tarjeta-cuerpo">
+        <% if (asignaciones.length > 0) { %>
+            <div class="tabla-contenedor">
+                <table class="tabla">
+                    <thead>
+                        <tr>
+                            <th>Docente</th>
+                            <th>Materia</th>
+                            <th>Grado</th>
+                            <th>Año Escolar</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% asignaciones.forEach(function(asignacion) { %>
+                            <tr>
+                                <td>
+                                    <strong><%= asignacion.docente ? asignacion.docente.nombre : 'N/A' %></strong>
+                                    <br>
+                                    <small style="color: var(--color-texto-claro);">
+                                        <%= asignacion.docente ? asignacion.docente.correo : '' %>
+                                    </small>
+                                </td>
+                                <td>
+                                    <% if (asignacion.materia) { %>
+                                        <%= asignacion.materia.nombre %>
+                                        <br>
+                                        <small style="color: var(--color-texto-claro);">
+                                            <%= asignacion.materia.codigo %>
+                                        </small>
+                                    <% } else { %>
+                                        N/A
+                                    <% } %>
+                                </td>
+                                <td>
+                                    <% if (asignacion.grado) { %>
+                                        <%= asignacion.grado.nombre %> <%= asignacion.grado.seccion %>
+                                        <br>
+                                        <small style="color: var(--color-texto-claro); text-transform: capitalize;">
+                                            <%= asignacion.grado.nivel %>
+                                        </small>
+                                    <% } else { %>
+                                        N/A
+                                    <% } %>
+                                </td>
+                                <td><%= asignacion.anioEscolar %></td>
+                                <td>
+                                    <span class="estado <%= asignacion.activo ? 'estado-activo' : 'estado-inactivo' %>">
+                                        <%= asignacion.activo ? 'Activa' : 'Inactiva' %>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="acciones">
+                                        <button onclick="confirmarEliminar('¿Seguro que deseas eliminar esta asignación?', '/admin/asignaciones/eliminar/<%= asignacion._id %>')" class="eliminar">
+                                            Eliminar
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        <% } else { %>
+            <div class="sin-datos">
+                <p>No hay asignaciones registradas</p>
+                <button onclick="abrirModal('modalCrearAsignacion')" class="boton boton-primario">Crear primera asignación</button>
+            </div>
+        <% } %>
+    </div>
+</div>
+
+<!-- Modal para crear asignación -->
+<div id="modalCrearAsignacion" class="modal-fondo">
+    <div class="modal">
+        <div class="modal-encabezado">
+            <h3>Nueva Asignación de Docente</h3>
+            <button class="modal-cerrar" onclick="cerrarModal('modalCrearAsignacion')">&times;</button>
+        </div>
+        <form method="POST" action="/admin/asignaciones/crear">
+            <div class="modal-cuerpo">
+                <div class="campo">
+                    <label for="docente">Docente *</label>
+                    <select id="docente" name="docente" required>
+                        <option value="">Seleccionar docente</option>
+                        <% docentes.forEach(function(docente) { %>
+                            <option value="<%= docente._id %>">
+                                <%= docente.nombre %> - <%= docente.correo %>
+                            </option>
+                        <% }); %>
+                    </select>
+                </div>
+                <div class="campo">
+                    <label for="materia">Materia *</label>
+                    <select id="materia" name="materia" required>
+                        <option value="">Seleccionar materia</option>
+                        <% materias.forEach(function(materia) { %>
+                            <option value="<%= materia._id %>">
+                                <%= materia.nombre %> (<%= materia.codigo %>)
+                            </option>
+                        <% }); %>
+                    </select>
+                </div>
+                <div class="campo">
+                    <label for="grado">Grado *</label>
+                    <select id="grado" name="grado" required>
+                        <option value="">Seleccionar grado</option>
+                        <% grados.forEach(function(grado) { %>
+                            <option value="<%= grado._id %>">
+                                <%= grado.nombre %> <%= grado.seccion %> - <%= grado.nivel %>
+                            </option>
+                        <% }); %>
+                    </select>
+                </div>
+                <div class="campo">
+                    <label for="anioEscolar">Año Escolar *</label>
+                    <input type="text" id="anioEscolar" name="anioEscolar" placeholder="Ej: 2024" value="<%= new Date().getFullYear() %>" required>
+                </div>
+            </div>
+            <div class="modal-pie">
+                <button type="button" class="boton" style="background: var(--color-borde);" onclick="cerrarModal('modalCrearAsignacion')">
+                    Cancelar
+                </button>
+                <button type="submit" class="boton boton-primario">Crear Asignación</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<%- include('../parciales/pie') %>

@@ -1,0 +1,185 @@
+<%- include('../parciales/encabezado') %>
+
+<!-- Mensajes -->
+<% if (mensaje) { %>
+    <div class="alerta alerta-exito"><%= mensaje %></div>
+<% } %>
+<% if (error) { %>
+    <div class="alerta alerta-error"><%= error %></div>
+<% } %>
+
+<!-- Tarjeta principal -->
+<div class="tarjeta">
+    <div class="tarjeta-encabezado">
+        <h2>Lista de Grados</h2>
+        <button onclick="abrirModal('modalCrearGrado')" class="boton boton-primario boton-pequeno">
+            + Nuevo Grado
+        </button>
+    </div>
+    <div class="tarjeta-cuerpo">
+        <% if (grados.length > 0) { %>
+            <div class="tabla-contenedor">
+                <table class="tabla">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Sección</th>
+                            <th>Nivel</th>
+                            <th>Año Escolar</th>
+                            <th>Capacidad</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% grados.forEach(function(grado) { %>
+                            <tr>
+                                <td><%= grado.nombre %></td>
+                                <td><%= grado.seccion %></td>
+                                <td style="text-transform: capitalize;"><%= grado.nivel %></td>
+                                <td><%= grado.anioEscolar %></td>
+                                <td><%= grado.capacidad %> alumnos</td>
+                                <td>
+                                    <span class="estado <%= grado.activo ? 'estado-activo' : 'estado-inactivo' %>">
+                                        <%= grado.activo ? 'Activo' : 'Inactivo' %>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="acciones">
+                                        <button onclick="editarGrado('<%= grado._id %>', '<%= grado.nombre %>', '<%= grado.seccion %>', '<%= grado.nivel %>', '<%= grado.anioEscolar %>', '<%= grado.capacidad %>', <%= grado.activo %>)" class="editar">
+                                            Editar
+                                        </button>
+                                        <button onclick="confirmarEliminar('¿Seguro que deseas eliminar este grado?', '/admin/grados/eliminar/<%= grado._id %>')" class="eliminar">
+                                            Eliminar
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        <% } else { %>
+            <div class="sin-datos">
+                <p>No hay grados registrados</p>
+                <button onclick="abrirModal('modalCrearGrado')" class="boton boton-primario">Crear primer grado</button>
+            </div>
+        <% } %>
+    </div>
+</div>
+
+<!-- Modal para crear grado -->
+<div id="modalCrearGrado" class="modal-fondo">
+    <div class="modal">
+        <div class="modal-encabezado">
+            <h3>Crear Nuevo Grado</h3>
+            <button class="modal-cerrar" onclick="cerrarModal('modalCrearGrado')">&times;</button>
+        </div>
+        <form method="POST" action="/admin/grados/crear">
+            <div class="modal-cuerpo">
+                <div class="campo">
+                    <label for="nombre">Nombre del Grado *</label>
+                    <input type="text" id="nombre" name="nombre" placeholder="Ej: Primero, Segundo" required>
+                </div>
+                <div class="fila-campos">
+                    <div class="campo">
+                        <label for="seccion">Sección *</label>
+                        <input type="text" id="seccion" name="seccion" placeholder="Ej: A, B, C" maxlength="2" required>
+                    </div>
+                    <div class="campo">
+                        <label for="nivel">Nivel *</label>
+                        <select id="nivel" name="nivel" required>
+                            <option value="">Seleccionar</option>
+                            <option value="primaria">Primaria</option>
+                            <option value="secundaria">Secundaria</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="fila-campos">
+                    <div class="campo">
+                        <label for="anioEscolar">Año Escolar *</label>
+                        <input type="text" id="anioEscolar" name="anioEscolar" placeholder="Ej: 2024" required>
+                    </div>
+                    <div class="campo">
+                        <label for="capacidad">Capacidad</label>
+                        <input type="number" id="capacidad" name="capacidad" value="30" min="1">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-pie">
+                <button type="button" class="boton" style="background: var(--color-borde);" onclick="cerrarModal('modalCrearGrado')">
+                    Cancelar
+                </button>
+                <button type="submit" class="boton boton-primario">Crear Grado</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal para editar grado -->
+<div id="modalEditarGrado" class="modal-fondo">
+    <div class="modal">
+        <div class="modal-encabezado">
+            <h3>Editar Grado</h3>
+            <button class="modal-cerrar" onclick="cerrarModal('modalEditarGrado')">&times;</button>
+        </div>
+        <form id="formEditarGrado" method="POST">
+            <div class="modal-cuerpo">
+                <div class="campo">
+                    <label for="editNombre">Nombre del Grado *</label>
+                    <input type="text" id="editNombre" name="nombre" required>
+                </div>
+                <div class="fila-campos">
+                    <div class="campo">
+                        <label for="editSeccion">Sección *</label>
+                        <input type="text" id="editSeccion" name="seccion" maxlength="2" required>
+                    </div>
+                    <div class="campo">
+                        <label for="editNivel">Nivel *</label>
+                        <select id="editNivel" name="nivel" required>
+                            <option value="primaria">Primaria</option>
+                            <option value="secundaria">Secundaria</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="fila-campos">
+                    <div class="campo">
+                        <label for="editAnioEscolar">Año Escolar *</label>
+                        <input type="text" id="editAnioEscolar" name="anioEscolar" required>
+                    </div>
+                    <div class="campo">
+                        <label for="editCapacidad">Capacidad</label>
+                        <input type="number" id="editCapacidad" name="capacidad" min="1">
+                    </div>
+                </div>
+                <div class="campo">
+                    <label>
+                        <input type="checkbox" id="editActivo" name="activo">
+                        Grado Activo
+                    </label>
+                </div>
+            </div>
+            <div class="modal-pie">
+                <button type="button" class="boton" style="background: var(--color-borde);" onclick="cerrarModal('modalEditarGrado')">
+                    Cancelar
+                </button>
+                <button type="submit" class="boton boton-primario">Actualizar Grado</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function editarGrado(id, nombre, seccion, nivel, anioEscolar, capacidad, activo) {
+        document.getElementById('formEditarGrado').action = '/admin/grados/editar/' + id;
+        document.getElementById('editNombre').value = nombre;
+        document.getElementById('editSeccion').value = seccion;
+        document.getElementById('editNivel').value = nivel;
+        document.getElementById('editAnioEscolar').value = anioEscolar;
+        document.getElementById('editCapacidad').value = capacidad;
+        document.getElementById('editActivo').checked = activo;
+        abrirModal('modalEditarGrado');
+    }
+</script>
+
+<%- include('../parciales/pie') %>

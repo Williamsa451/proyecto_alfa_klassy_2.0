@@ -1,0 +1,172 @@
+<%- include('../parciales/encabezado') %>
+
+<!-- Mensajes -->
+<% if (mensaje) { %>
+    <div class="alerta alerta-exito"><%= mensaje %></div>
+<% } %>
+<% if (error) { %>
+    <div class="alerta alerta-error"><%= error %></div>
+<% } %>
+
+<!-- Tarjeta principal -->
+<div class="tarjeta">
+    <div class="tarjeta-encabezado">
+        <h2>Lista de Materias</h2>
+        <button onclick="abrirModal('modalCrearMateria')" class="boton boton-primario boton-pequeno">
+            + Nueva Materia
+        </button>
+    </div>
+    <div class="tarjeta-cuerpo">
+        <% if (materias.length > 0) { %>
+            <div class="tabla-contenedor">
+                <table class="tabla">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Nivel</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% materias.forEach(function(materia) { %>
+                            <tr>
+                                <td><strong><%= materia.codigo %></strong></td>
+                                <td><%= materia.nombre %></td>
+                                <td><%= materia.descripcion ? materia.descripcion.substring(0, 50) + '...' : '-' %></td>
+                                <td style="text-transform: capitalize;"><%= materia.nivel %></td>
+                                <td>
+                                    <span class="estado <%= materia.activo ? 'estado-activo' : 'estado-inactivo' %>">
+                                        <%= materia.activo ? 'Activa' : 'Inactiva' %>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="acciones">
+                                        <button onclick="editarMateria('<%= materia._id %>', '<%= materia.nombre %>', '<%= materia.codigo %>', '<%= materia.descripcion || '' %>', '<%= materia.nivel %>', <%= materia.activo %>)" class="editar">
+                                            Editar
+                                        </button>
+                                        <button onclick="confirmarEliminar('¿Seguro que deseas eliminar esta materia?', '/admin/materias/eliminar/<%= materia._id %>')" class="eliminar">
+                                            Eliminar
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        <% } else { %>
+            <div class="sin-datos">
+                <p>No hay materias registradas</p>
+                <button onclick="abrirModal('modalCrearMateria')" class="boton boton-primario">Crear primera materia</button>
+            </div>
+        <% } %>
+    </div>
+</div>
+
+<!-- Modal para crear materia -->
+<div id="modalCrearMateria" class="modal-fondo">
+    <div class="modal">
+        <div class="modal-encabezado">
+            <h3>Crear Nueva Materia</h3>
+            <button class="modal-cerrar" onclick="cerrarModal('modalCrearMateria')">&times;</button>
+        </div>
+        <form method="POST" action="/admin/materias/crear">
+            <div class="modal-cuerpo">
+                <div class="fila-campos">
+                    <div class="campo">
+                        <label for="codigo">Código *</label>
+                        <input type="text" id="codigo" name="codigo" placeholder="Ej: MAT001" required>
+                    </div>
+                    <div class="campo">
+                        <label for="nombre">Nombre *</label>
+                        <input type="text" id="nombre" name="nombre" placeholder="Nombre de la materia" required>
+                    </div>
+                </div>
+                <div class="campo">
+                    <label for="descripcion">Descripción</label>
+                    <textarea id="descripcion" name="descripcion" placeholder="Descripción de la materia"></textarea>
+                </div>
+                <div class="campo">
+                    <label for="nivel">Nivel *</label>
+                    <select id="nivel" name="nivel" required>
+                        <option value="">Seleccionar</option>
+                        <option value="primaria">Primaria</option>
+                        <option value="secundaria">Secundaria</option>
+                        <option value="ambos">Ambos niveles</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-pie">
+                <button type="button" class="boton" style="background: var(--color-borde);" onclick="cerrarModal('modalCrearMateria')">
+                    Cancelar
+                </button>
+                <button type="submit" class="boton boton-primario">Crear Materia</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal para editar materia -->
+<div id="modalEditarMateria" class="modal-fondo">
+    <div class="modal">
+        <div class="modal-encabezado">
+            <h3>Editar Materia</h3>
+            <button class="modal-cerrar" onclick="cerrarModal('modalEditarMateria')">&times;</button>
+        </div>
+        <form id="formEditarMateria" method="POST">
+            <div class="modal-cuerpo">
+                <div class="fila-campos">
+                    <div class="campo">
+                        <label for="editCodigo">Código *</label>
+                        <input type="text" id="editCodigo" name="codigo" required>
+                    </div>
+                    <div class="campo">
+                        <label for="editNombre">Nombre *</label>
+                        <input type="text" id="editNombre" name="nombre" required>
+                    </div>
+                </div>
+                <div class="campo">
+                    <label for="editDescripcion">Descripción</label>
+                    <textarea id="editDescripcion" name="descripcion"></textarea>
+                </div>
+                <div class="campo">
+                    <label for="editNivel">Nivel *</label>
+                    <select id="editNivel" name="nivel" required>
+                        <option value="primaria">Primaria</option>
+                        <option value="secundaria">Secundaria</option>
+                        <option value="ambos">Ambos niveles</option>
+                    </select>
+                </div>
+                <div class="campo">
+                    <label>
+                        <input type="checkbox" id="editActivo" name="activo">
+                        Materia Activa
+                    </label>
+                </div>
+            </div>
+            <div class="modal-pie">
+                <button type="button" class="boton" style="background: var(--color-borde);" onclick="cerrarModal('modalEditarMateria')">
+                    Cancelar
+                </button>
+                <button type="submit" class="boton boton-primario">Actualizar Materia</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function editarMateria(id, nombre, codigo, descripcion, nivel, activo) {
+        document.getElementById('formEditarMateria').action = '/admin/materias/editar/' + id;
+        document.getElementById('editNombre').value = nombre;
+        document.getElementById('editCodigo').value = codigo;
+        document.getElementById('editDescripcion').value = descripcion;
+        document.getElementById('editNivel').value = nivel;
+        document.getElementById('editActivo').checked = activo;
+        abrirModal('modalEditarMateria');
+    }
+</script>
+
+<%- include('../parciales/pie') %>

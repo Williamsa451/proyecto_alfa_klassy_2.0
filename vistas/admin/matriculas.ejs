@@ -1,0 +1,166 @@
+<%- include('../parciales/encabezado') %>
+
+<!-- Mensajes -->
+<% if (mensaje) { %>
+    <div class="alerta alerta-exito"><%= mensaje %></div>
+<% } %>
+<% if (error) { %>
+    <div class="alerta alerta-error"><%= error %></div>
+<% } %>
+
+<!-- Tarjeta principal -->
+<div class="tarjeta">
+    <div class="tarjeta-encabezado">
+        <h2>Lista de Matrículas</h2>
+        <button onclick="abrirModal('modalCrearMatricula')" class="boton boton-primario boton-pequeno">
+            + Nueva Matrícula
+        </button>
+    </div>
+    <div class="tarjeta-cuerpo">
+        <% if (matriculas.length > 0) { %>
+            <div class="tabla-contenedor">
+                <table class="tabla">
+                    <thead>
+                        <tr>
+                            <th>Alumno</th>
+                            <th>Documento</th>
+                            <th>Grado</th>
+                            <th>Año Escolar</th>
+                            <th>Fecha Matrícula</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% matriculas.forEach(function(matricula) { %>
+                            <tr>
+                                <td><%= matricula.alumno ? matricula.alumno.nombre : 'N/A' %></td>
+                                <td><%= matricula.alumno ? matricula.alumno.documento : 'N/A' %></td>
+                                <td>
+                                    <% if (matricula.grado) { %>
+                                        <%= matricula.grado.nombre %> <%= matricula.grado.seccion %> 
+                                        (<%= matricula.grado.nivel %>)
+                                    <% } else { %>
+                                        N/A
+                                    <% } %>
+                                </td>
+                                <td><%= matricula.anioEscolar %></td>
+                                <td><%= matricula.fechaMatricula.toLocaleDateString('es-ES') %></td>
+                                <td>
+                                    <span class="estado 
+                                        <%= matricula.estado === 'activa' ? 'estado-activo' : '' %>
+                                        <%= matricula.estado === 'retirada' ? 'estado-inactivo' : '' %>
+                                        <%= matricula.estado === 'pendiente' ? 'estado-pendiente' : '' %>
+                                        <%= matricula.estado === 'graduada' ? 'estado-activo' : '' %>
+                                    ">
+                                        <%= matricula.estado.charAt(0).toUpperCase() + matricula.estado.slice(1) %>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="acciones">
+                                        <button onclick="cambiarEstado('<%= matricula._id %>')" class="editar">
+                                            Cambiar Estado
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        <% } else { %>
+            <div class="sin-datos">
+                <p>No hay matrículas registradas</p>
+                <button onclick="abrirModal('modalCrearMatricula')" class="boton boton-primario">Crear primera matrícula</button>
+            </div>
+        <% } %>
+    </div>
+</div>
+
+<!-- Modal para crear matrícula -->
+<div id="modalCrearMatricula" class="modal-fondo">
+    <div class="modal">
+        <div class="modal-encabezado">
+            <h3>Nueva Matrícula</h3>
+            <button class="modal-cerrar" onclick="cerrarModal('modalCrearMatricula')">&times;</button>
+        </div>
+        <form method="POST" action="/admin/matriculas/crear">
+            <div class="modal-cuerpo">
+                <div class="campo">
+                    <label for="alumno">Alumno *</label>
+                    <select id="alumno" name="alumno" required>
+                        <option value="">Seleccionar alumno</option>
+                        <% alumnos.forEach(function(alumno) { %>
+                            <option value="<%= alumno._id %>">
+                                <%= alumno.nombre %> - <%= alumno.documento %>
+                            </option>
+                        <% }); %>
+                    </select>
+                </div>
+                <div class="campo">
+                    <label for="grado">Grado *</label>
+                    <select id="grado" name="grado" required>
+                        <option value="">Seleccionar grado</option>
+                        <% grados.forEach(function(grado) { %>
+                            <option value="<%= grado._id %>">
+                                <%= grado.nombre %> <%= grado.seccion %> - <%= grado.nivel %>
+                            </option>
+                        <% }); %>
+                    </select>
+                </div>
+                <div class="campo">
+                    <label for="anioEscolar">Año Escolar *</label>
+                    <input type="text" id="anioEscolar" name="anioEscolar" placeholder="Ej: 2024" value="<%= new Date().getFullYear() %>" required>
+                </div>
+                <div class="campo">
+                    <label for="observaciones">Observaciones</label>
+                    <textarea id="observaciones" name="observaciones" placeholder="Observaciones adicionales"></textarea>
+                </div>
+            </div>
+            <div class="modal-pie">
+                <button type="button" class="boton" style="background: var(--color-borde);" onclick="cerrarModal('modalCrearMatricula')">
+                    Cancelar
+                </button>
+                <button type="submit" class="boton boton-primario">Crear Matrícula</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal para cambiar estado -->
+<div id="modalCambiarEstado" class="modal-fondo">
+    <div class="modal">
+        <div class="modal-encabezado">
+            <h3>Cambiar Estado de Matrícula</h3>
+            <button class="modal-cerrar" onclick="cerrarModal('modalCambiarEstado')">&times;</button>
+        </div>
+        <form id="formCambiarEstado" method="POST">
+            <div class="modal-cuerpo">
+                <div class="campo">
+                    <label for="estado">Nuevo Estado *</label>
+                    <select id="estado" name="estado" required>
+                        <option value="activa">Activa</option>
+                        <option value="retirada">Retirada</option>
+                        <option value="graduada">Graduada</option>
+                        <option value="pendiente">Pendiente</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-pie">
+                <button type="button" class="boton" style="background: var(--color-borde);" onclick="cerrarModal('modalCambiarEstado')">
+                    Cancelar
+                </button>
+                <button type="submit" class="boton boton-primario">Actualizar Estado</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function cambiarEstado(id) {
+        document.getElementById('formCambiarEstado').action = '/admin/matriculas/estado/' + id;
+        abrirModal('modalCambiarEstado');
+    }
+</script>
+
+<%- include('../parciales/pie') %>

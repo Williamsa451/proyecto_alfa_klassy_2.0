@@ -1,0 +1,47 @@
+        </main>
+    </div>
+
+    <!-- Script para modales -->
+    <script>
+        // Función para abrir un modal
+        function abrirModal(idModal) {
+            const modal = document.getElementById(idModal);
+            if (modal) {
+                modal.classList.add('activo');
+            }
+        }
+
+        // Función para cerrar un modal
+        function cerrarModal(idModal) {
+            const modal = document.getElementById(idModal);
+            if (modal) {
+                modal.classList.remove('activo');
+            }
+        }
+
+        // Cerrar modal al hacer clic fuera de él
+        document.addEventListener('click', function(evento) {
+            if (evento.target.classList.contains('modal-fondo')) {
+                evento.target.classList.remove('activo');
+            }
+        });
+
+        // Cerrar modal con tecla Escape
+        document.addEventListener('keydown', function(evento) {
+            if (evento.key === 'Escape') {
+                const modales = document.querySelectorAll('.modal-fondo.activo');
+                modales.forEach(function(modal) {
+                    modal.classList.remove('activo');
+                });
+            }
+        });
+
+        // Función para confirmar eliminación
+        function confirmarEliminar(mensaje, url) {
+            if (confirm(mensaje || '¿Estás seguro de que deseas eliminar este registro?')) {
+                window.location.href = url;
+            }
+        }
+    </script>
+</body>
+</html>

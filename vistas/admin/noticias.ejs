@@ -1,0 +1,80 @@
+<%- include('../parciales/encabezado') %>
+
+<!-- Mensajes -->
+<% if (mensaje) { %>
+    <div class="alerta alerta-exito"><%= mensaje %></div>
+<% } %>
+<% if (error) { %>
+    <div class="alerta alerta-error"><%= error %></div>
+<% } %>
+
+<!-- Grid de dos columnas -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+    <!-- Formulario para crear noticia -->
+    <div class="tarjeta">
+        <div class="tarjeta-encabezado">
+            <h2>Publicar Noticia</h2>
+        </div>
+        <div class="tarjeta-cuerpo">
+            <form method="POST" action="/admin/noticias/crear" class="formulario">
+                <div class="campo">
+                    <label for="titulo">Título *</label>
+                    <input type="text" id="titulo" name="titulo" placeholder="Título de la noticia" required>
+                </div>
+                <div class="campo">
+                    <label for="contenido">Contenido *</label>
+                    <textarea id="contenido" name="contenido" placeholder="Escribe el contenido de la noticia..." required></textarea>
+                </div>
+                <div class="campo">
+                    <label for="categoria">Categoría *</label>
+                    <select id="categoria" name="categoria" required>
+                        <option value="general">General</option>
+                        <option value="academica">Académica</option>
+                        <option value="evento">Evento</option>
+                        <option value="urgente">Urgente</option>
+                    </select>
+                </div>
+                <button type="submit" class="boton boton-primario">Publicar Noticia</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Lista de noticias -->
+    <div class="tarjeta">
+        <div class="tarjeta-encabezado">
+            <h2>Noticias Publicadas</h2>
+        </div>
+        <div class="tarjeta-cuerpo">
+            <% if (noticias.length > 0) { %>
+                <div class="noticias-lista">
+                    <% noticias.forEach(function(noticia) { %>
+                        <div class="noticia-item">
+                            <div style="display: flex; justify-content: space-between; align-items: start;">
+                                <div>
+                                    <span class="categoria-badge categoria-<%= noticia.categoria %>">
+                                        <%= noticia.categoria %>
+                                    </span>
+                                    <h4 style="margin-top: 8px;"><%= noticia.titulo %></h4>
+                                </div>
+                                <button onclick="confirmarEliminar('¿Eliminar esta noticia?', '/admin/noticias/eliminar/<%= noticia._id %>')" class="boton boton-peligro boton-pequeno">
+                                    Eliminar
+                                </button>
+                            </div>
+                            <p style="margin-top: 8px;"><%= noticia.contenido.substring(0, 150) %>...</p>
+                            <div class="noticia-meta">
+                                <span>Por <%= noticia.autor ? noticia.autor.nombre : 'Admin' %></span>
+                                <span><%= noticia.fechaPublicacion.toLocaleDateString('es-ES') %></span>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            <% } else { %>
+                <div class="sin-datos">
+                    <p>No hay noticias publicadas</p>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<%- include('../parciales/pie') %>
