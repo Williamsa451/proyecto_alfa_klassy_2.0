@@ -88,7 +88,8 @@ router.get('/usuarios/crear', (req, res) => {
     res.render('admin/usuarios-formulario', {
         titulo: 'Crear Usuario',
         pagina: 'usuarios',
-        usuario: null,
+        usuario: req.session.usuario,
+        usuarioFormulario:null,
         error: null
     });
 });
@@ -104,7 +105,7 @@ router.post('/usuarios/crear', async (req, res) => {
             return res.render('admin/usuarios-formulario', {
                 titulo: 'Crear Usuario',
                 pagina: 'usuarios',
-                usuario: req.body,
+                usuarioFormulario: req.body,
                 error: 'El correo ya está registrado'
             });
         }
@@ -115,7 +116,7 @@ router.post('/usuarios/crear', async (req, res) => {
             return res.render('admin/usuarios-formulario', {
                 titulo: 'Crear Usuario',
                 pagina: 'usuarios',
-                usuario: req.body,
+                usuarioFormulario: req.body,
                 error: 'El documento ya está registrado'
             });
         }
@@ -142,7 +143,7 @@ router.post('/usuarios/crear', async (req, res) => {
         res.render('admin/usuarios-formulario', {
             titulo: 'Crear Usuario',
             pagina: 'usuarios',
-            usuario: req.body,
+            usuarioFormulario: req.body,
             error: 'Error al crear el usuario'
         });
     }
@@ -159,7 +160,7 @@ router.get('/usuarios/editar/:id', async (req, res) => {
         res.render('admin/usuarios-formulario', {
             titulo: 'Editar Usuario',
             pagina: 'usuarios',
-            usuario,
+            usuarioFormulario,
             error: null
         });
     } catch (error) {

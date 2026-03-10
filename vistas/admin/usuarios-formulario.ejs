@@ -2,7 +2,7 @@
 
 <div class="tarjeta">
     <div class="tarjeta-encabezado">
-        <h2><%= usuario && usuario._id ? 'Editar Usuario' : 'Crear Nuevo Usuario' %></h2>
+        <h2><%= usuarioFormulario && usuarioFormulario._id ? 'Editar Usuario' : 'Crear Nuevo Usuario' %></h2>
         <a href="/admin/usuarios" class="boton boton-pequeno" style="background: var(--color-texto-claro); color: white;">
             Volver
         </a>
@@ -13,7 +13,7 @@
             <div class="alerta alerta-error"><%= error %></div>
         <% } %>
         
-        <form class="formulario" method="POST" action="/admin/usuarios/<%= usuario && usuario._id ? 'editar/' + usuario._id : 'crear' %>">
+        <form class="formulario" method="POST" action="/admin/usuarios/<%= usuarioFormulario && usuarioFormulario._id ? 'editar/' + usuarioFormulario._id : 'crear' %>">
             <div class="fila-campos">
                 <div class="campo">
                     <label for="nombre">Nombre Completo *</label>
@@ -21,7 +21,7 @@
                         type="text" 
                         id="nombre" 
                         name="nombre" 
-                        value="<%= usuario ? usuario.nombre : '' %>"
+                        value="<%= usuarioFormulario ? usuarioFormulario.nombre : '' %>"
                         placeholder="Nombre del usuario"
                         required
                     >
@@ -33,7 +33,7 @@
                         type="text" 
                         id="documento" 
                         name="documento" 
-                        value="<%= usuario ? usuario.documento : '' %>"
+                        value="<%= usuarioFormulario ? usuarioFormulario.documento : '' %>"
                         placeholder="Número de documento"
                         required
                     >
@@ -47,7 +47,7 @@
                         type="email" 
                         id="correo" 
                         name="correo" 
-                        value="<%= usuario ? usuario.correo : '' %>"
+                        value="<%= usuarioFormulario ? usuarioFormulario.correo : '' %>"
                         placeholder="correo@ejemplo.com"
                         required
                     >
@@ -55,14 +55,14 @@
                 
                 <div class="campo">
                     <label for="contrasena">
-                        Contraseña <%= usuario && usuario._id ? '(dejar vacío para no cambiar)' : '*' %>
+                        Contraseña <%= usuarioFormulario && usuarioFormulario._id ? '(dejar vacío para no cambiar)' : '*' %>
                     </label>
                     <input 
                         type="password" 
                         id="contrasena" 
                         name="contrasena" 
-                        placeholder="<%= usuario && usuario._id ? 'Nueva contraseña' : 'Contraseña' %>"
-                        <%= usuario && usuario._id ? '' : 'required' %>
+                        placeholder="<%= usuarioFormulario && usuarioFormulario._id ? 'Nueva contraseña' : 'Contraseña' %>"
+                        <%= usuarioFormulario && usuarioFormulario._id ? '' : 'required' %>
                     >
                 </div>
             </div>
@@ -72,9 +72,10 @@
                     <label for="rol">Rol del Usuario *</label>
                     <select id="rol" name="rol" required>
                         <option value="">Seleccionar rol</option>
-                        <option value="admin" <%= usuario && usuario.rol === 'admin' ? 'selected' : '' %>>Administrador</option>
-                        <option value="docente" <%= usuario && usuario.rol === 'docente' ? 'selected' : '' %>>Docente</option>
-                        <option value="alumno" <%= usuario && usuario.rol === 'alumno' ? 'selected' : '' %>>Alumno</option>
+                        <option value="admin" <%= usuarioFormulario && usuarioFormulario.rol === 'admin' ? 'selected' : '' %>>Administrador</option>
+                        <option value="director" <%= usuarioFormulario && usuarioFormulario.rol === 'director' ? 'selected' : '' %>>Director</option>
+                        <option value="docente" <%= usuarioFormulario && usuarioFormulario.rol === 'docente' ? 'selected' : '' %>>Docente</option>
+                        <option value="alumno" <%= usuarioFormulario && usuarioFormulario.rol === 'alumno' ? 'selected' : '' %>>Alumno</option>
                     </select>
                 </div>
                 
@@ -84,7 +85,7 @@
                         type="text" 
                         id="telefono" 
                         name="telefono" 
-                        value="<%= usuario ? usuario.telefono : '' %>"
+                        value="<%= usuarioFormulario ? usuarioFormulario.telefono : '' %>"
                         placeholder="Número de teléfono"
                     >
                 </div>
@@ -96,18 +97,18 @@
                     type="text" 
                     id="direccion" 
                     name="direccion" 
-                    value="<%= usuario ? usuario.direccion : '' %>"
+                    value="<%= usuarioFormulario ? usuarioFormulario.direccion : '' %>"
                     placeholder="Dirección del usuario"
                 >
             </div>
             
-            <% if (usuario && usuario._id) { %>
+            <% if (usuarioFormulario && usuarioFormulario._id) { %>
                 <div class="campo">
                     <label>
                         <input 
                             type="checkbox" 
                             name="activo" 
-                            <%= usuario.activo ? 'checked' : '' %>
+                            <%= usuarioFormulario.activo ? 'checked' : '' %>
                         >
                         Usuario Activo
                     </label>
@@ -116,7 +117,7 @@
             
             <div class="botones">
                 <button type="submit" class="boton boton-primario">
-                    <%= usuario && usuario._id ? 'Actualizar Usuario' : 'Crear Usuario' %>
+                    <%= usuarioFormulario && usuarioFormulario._id ? 'Actualizar Usuario' : 'Crear Usuario' %>
                 </button>
                 <a href="/admin/usuarios" class="boton" style="background: var(--color-borde);">
                     Cancelar
