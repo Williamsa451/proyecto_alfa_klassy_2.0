@@ -160,7 +160,7 @@ router.get('/usuarios/editar/:id', async (req, res) => {
         res.render('admin/usuarios-formulario', {
             titulo: 'Editar Usuario',
             pagina: 'usuarios',
-            usuarioFormulario,
+            usuarioFormulario: usuario,
             error: null
         });
     } catch (error) {
