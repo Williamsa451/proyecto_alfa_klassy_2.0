@@ -1,69 +1,42 @@
 <%- include('../parciales/encabezado') %>
 
-<div class="tarjeta">
+<div class="tarjeta" style="max-width: 850px; margin: 20px auto;">
     <div class="tarjeta-encabezado">
         <h2><%= usuarioFormulario && usuarioFormulario._id ? 'Editar Usuario' : 'Crear Nuevo Usuario' %></h2>
-        <a href="/admin/usuarios" class="boton boton-pequeno" style="background: var(--color-texto-claro); color: white;">
-            Volver
+        <a href="/admin/usuarios" class="boton-volver">
+            <i class="fas fa-arrow-left"></i> Volver
         </a>
     </div>
     <div class="tarjeta-cuerpo">
-        <!-- Mensaje de error -->
         <% if (error) { %>
             <div class="alerta alerta-error"><%= error %></div>
         <% } %>
         
         <form class="formulario" method="POST" action="/admin/usuarios/<%= usuarioFormulario && usuarioFormulario._id ? 'editar/' + usuarioFormulario._id : 'crear' %>">
+            
             <div class="fila-campos">
                 <div class="campo">
                     <label for="nombre">Nombre Completo *</label>
-                    <input 
-                        type="text" 
-                        id="nombre" 
-                        name="nombre" 
-                        value="<%= usuarioFormulario ? usuarioFormulario.nombre : '' %>"
-                        placeholder="Nombre del usuario"
-                        required
-                    >
+                    <input type="text" id="nombre" name="nombre" value="<%= usuarioFormulario ? usuarioFormulario.nombre : '' %>" placeholder="Nombre del usuario" required>
                 </div>
                 
                 <div class="campo">
                     <label for="documento">Documento de Identidad *</label>
-                    <input 
-                        type="text" 
-                        id="documento" 
-                        name="documento" 
-                        value="<%= usuarioFormulario ? usuarioFormulario.documento : '' %>"
-                        placeholder="Número de documento"
-                        required
-                    >
+                    <input type="text" id="documento" name="documento" value="<%= usuarioFormulario ? usuarioFormulario.documento : '' %>" placeholder="Número de documento" required>
                 </div>
             </div>
             
             <div class="fila-campos">
                 <div class="campo">
                     <label for="correo">Correo Electrónico *</label>
-                    <input 
-                        type="email" 
-                        id="correo" 
-                        name="correo" 
-                        value="<%= usuarioFormulario ? usuarioFormulario.correo : '' %>"
-                        placeholder="correo@ejemplo.com"
-                        required
-                    >
+                    <input type="email" id="correo" name="correo" value="<%= usuarioFormulario ? usuarioFormulario.correo : '' %>" placeholder="correo@ejemplo.com" required>
                 </div>
                 
                 <div class="campo">
                     <label for="contrasena">
-                        Contraseña <%= usuarioFormulario && usuarioFormulario._id ? '(dejar vacío para no cambiar)' : '*' %>
+                        Contraseña <%= usuarioFormulario && usuarioFormulario._id ? '(Opcional)' : '*' %>
                     </label>
-                    <input 
-                        type="password" 
-                        id="contrasena" 
-                        name="contrasena" 
-                        placeholder="<%= usuarioFormulario && usuarioFormulario._id ? 'Nueva contraseña' : 'Contraseña' %>"
-                        <%= usuarioFormulario && usuarioFormulario._id ? '' : 'required' %>
-                    >
+                    <input type="password" id="contrasena" name="contrasena" placeholder="<%= usuarioFormulario && usuarioFormulario._id ? 'Dejar vacío para mantener actual' : 'Mínimo 6 caracteres' %>" <%= usuarioFormulario && usuarioFormulario._id ? '' : 'required' %>>
                 </div>
             </div>
             
@@ -81,47 +54,27 @@
                 
                 <div class="campo">
                     <label for="telefono">Teléfono</label>
-                    <input 
-                        type="text" 
-                        id="telefono" 
-                        name="telefono" 
-                        value="<%= usuarioFormulario ? usuarioFormulario.telefono : '' %>"
-                        placeholder="Número de teléfono"
-                    >
+                    <input type="text" id="telefono" name="telefono" value="<%= usuarioFormulario ? usuarioFormulario.telefono : '' %>" placeholder="Número de teléfono">
                 </div>
             </div>
             
             <div class="campo">
                 <label for="direccion">Dirección</label>
-                <input 
-                    type="text" 
-                    id="direccion" 
-                    name="direccion" 
-                    value="<%= usuarioFormulario ? usuarioFormulario.direccion : '' %>"
-                    placeholder="Dirección del usuario"
-                >
+                <input type="text" id="direccion" name="direccion" value="<%= usuarioFormulario ? usuarioFormulario.direccion : '' %>" placeholder="Dirección del usuario">
             </div>
             
             <% if (usuarioFormulario && usuarioFormulario._id) { %>
-                <div class="campo">
-                    <label>
-                        <input 
-                            type="checkbox" 
-                            name="activo" 
-                            <%= usuarioFormulario.activo ? 'checked' : '' %>
-                        >
-                        Usuario Activo
-                    </label>
+                <div class="campo-check">
+                    <input type="checkbox" id="activo" name="activo" <%= usuarioFormulario.activo ? 'checked' : '' %>>
+                    <label for="activo">Usuario Activo en el Sistema</label>
                 </div>
             <% } %>
             
             <div class="botones">
                 <button type="submit" class="boton boton-primario">
-                    <%= usuarioFormulario && usuarioFormulario._id ? 'Actualizar Usuario' : 'Crear Usuario' %>
+                    <i class="fas fa-save"></i> <%= usuarioFormulario && usuarioFormulario._id ? 'Actualizar Usuario' : 'Crear Usuario' %>
                 </button>
-                <a href="/admin/usuarios" class="boton" style="background: var(--color-borde);">
-                    Cancelar
-                </a>
+                <a href="/admin/usuarios" class="boton boton-cancelar">Cancelar</a>
             </div>
         </form>
     </div>
