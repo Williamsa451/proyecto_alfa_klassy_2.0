@@ -46,11 +46,11 @@
                                 </td>
                                 <td>
                                     <div class="acciones">
-                                        <button onclick="editarGrado('<%= grado._id %>', '<%= grado.nombre %>', '<%= grado.seccion %>', '<%= grado.nivel %>', '<%= grado.anioEscolar %>', '<%= grado.capacidad %>', <%= grado.activo %>)" class="editar">
-                                            <i class="fas fa-edit"></i> Editar
+                                        <button onclick="editarGrado('<%= grado._id %>', '<%= grado.nombre %>', '<%= grado.seccion %>', '<%= grado.nivel %>', '<%= grado.anioEscolar %>', '<%= grado.capacidad %>', <%= grado.activo %>)" class="btn-icon editar" title="Editar">
+                                            <i class="fas fa-edit"></i> 
                                         </button>
-                                        <button onclick="confirmarEliminar('¿Seguro que deseas eliminar este grado?', '/admin/grados/eliminar/<%= grado._id %>')" class="eliminar">
-                                            <i class="fas fa-trash"></i> Eliminar
+                                        <button onclick="confirmarEliminar('¿Seguro que deseas eliminar este grado?', '/admin/grados/eliminar/<%= grado._id %>')" class="btn-icon eliminar" title="Eliminar">
+                                            <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
                                 </td>
