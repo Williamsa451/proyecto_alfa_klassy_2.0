@@ -1,0 +1,111 @@
+<%- include('../parciales/encabezado') %>
+
+<!-- Promedio general -->
+<div class="tarjeta" style="margin-bottom: 20px; background: linear-gradient(135deg, var(--color-primario) 0%, var(--color-primario-oscuro) 100%); color: white;">
+    <div class="tarjeta-cuerpo" style="text-align: center; padding: 30px;">
+        <h3 style="margin-bottom: 10px; opacity: 0.9;">Promedio General</h3>
+        <p style="font-size: 48px; font-weight: 700;">
+            <%= promedioGeneral %>
+        </p>
+        <p style="opacity: 0.8; margin-top: 10px;">
+            <% if (promedioGeneral >= 90) { %>
+                ¡Excelente trabajo! Sigue así.
+            <% } else if (promedioGeneral >= 70) { %>
+                ¡Buen trabajo! Puedes mejorar aún más.
+            <% } else if (promedioGeneral >= 60) { %>
+                ¡Ánimo! Con esfuerzo puedes mejorar.
+            <% } else if (promedioGeneral > 0) { %>
+                Necesitas esforzarte más. ¡Tú puedes!
+            <% } else { %>
+                Aún no tienes notas registradas.
+            <% } %>
+        </p>
+    </div>
+</div>
+
+<!-- Notas por materia -->
+<div class="tarjeta">
+    <div class="tarjeta-encabezado">
+        <h2>Mis Notas por Materia</h2>
+    </div>
+    <div class="tarjeta-cuerpo">
+        <% if (notasPorMateria && notasPorMateria.length > 0) { %>
+            <div style="display: grid; gap: 20px;">
+                <% notasPorMateria.forEach(function(item) { %>
+                    <div style="border: 1px solid var(--color-borde); border-radius: var(--radio-borde); overflow: hidden;">
+                        <!-- Encabezado de materia -->
+                        <div style="background: var(--color-fondo); padding: 15px 20px; border-bottom: 1px solid var(--color-borde);">
+                            <h4 style="margin: 0;"><%= item.materia.nombre %></h4>
+                            <small style="color: var(--color-texto-claro);">Código: <%= item.materia.codigo || 'N/A' %></small>
+                        </div>
+                        
+                        <!-- Notas -->
+                        <div style="padding: 20px;">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                                <% item.notas.forEach(function(nota) { %>
+                                    <div style="text-align: center; padding: 15px; background: var(--color-fondo); border-radius: var(--radio-borde);">
+                                        <p style="color: var(--color-texto-claro); font-size: 12px; margin-bottom: 5px;">
+                                            <%= nota.periodo ? nota.periodo.nombre : 'Período' %>
+                                        </p>
+                                        <p class="nota-valor 
+                                            <% if (nota.nota >= 90) { %>nota-aprobada
+                                            <% } else if (nota.nota >= 60) { %>nota-regular
+                                            <% } else { %>nota-reprobada<% } %>" 
+                                            style="font-size: 28px;">
+                                            <%= nota.nota.toFixed(1) %>
+                                        </p>
+                                    </div>
+                                <% }); %>
+                            </div>
+                            
+                            <!-- Promedio de la materia -->
+                            <% 
+                                let sumaMateria = 0;
+                                let conteoMateria = 0;
+                                item.notas.forEach(function(n) {
+                                    if (n.nota > 0) {
+                                        sumaMateria += n.nota;
+                                        conteoMateria++;
+                                    }
+                                });
+                                const promedioMateria = conteoMateria > 0 ? (sumaMateria / conteoMateria).toFixed(1) : 0;
+                            %>
+                            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--color-borde); display: flex; justify-content: space-between; align-items: center;">
+                                <span style="color: var(--color-texto-claro);">Promedio de la materia:</span>
+                                <span class="nota-valor <%= promedioMateria >= 60 ? 'nota-aprobada' : 'nota-reprobada' %>">
+                                    <%= promedioMateria %>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <div class="sin-datos">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                <p>No tienes notas registradas aún</p>
+                <p style="font-size: 14px; margin-top: 10px;">Las notas aparecerán aquí cuando tus docentes las registren.</p>
+            </div>
+        <% } %>
+    </div>
+</div>
+
+<!-- Leyenda de colores -->
+<div style="margin-top: 20px; padding: 15px; background: var(--color-blanco); border-radius: var(--radio-borde); display: flex; gap: 30px; justify-content: center;">
+    <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="width: 16px; height: 16px; background: var(--color-exito); border-radius: 4px;"></div>
+        <span style="font-size: 14px;">90 - 100: Excelente</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="width: 16px; height: 16px; background: var(--color-advertencia); border-radius: 4px;"></div>
+        <span style="font-size: 14px;">60 - 89: Aprobado</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="width: 16px; height: 16px; background: var(--color-peligro); border-radius: 4px;"></div>
+        <span style="font-size: 14px;">0 - 59: Reprobado</span>
+    </div>
+</div>
+
+<%- include('../parciales/pie') %>
