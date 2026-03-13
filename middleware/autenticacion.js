@@ -33,6 +33,15 @@ function soloAdmin(req, res, next) {
     }
 }
 
+// Verificar si el usuario es director docente
+function soloDirector(req, res, next) {
+    if (req.session.usuario && req.session.usuario.rol === 'director') {
+        next();
+    } else {
+        res.redirect('/login');
+    }
+}
+
 // Verificar si el usuario es docente CON asignación activa
 async function soloDocente(req, res, next) {
     try {
@@ -116,6 +125,7 @@ async function soloAlumno(req, res, next) {
 module.exports = {
     verificarSesion,
     soloAdmin,
+    soloDirector,
     soloDocente,
     soloAlumno,
     obtenerAnioEscolarActual
