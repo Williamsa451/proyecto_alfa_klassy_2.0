@@ -1,128 +1,134 @@
 <%- include('../parciales/encabezado') %>
 
-<% if (mensaje) { %>
-    <div class="alerta alerta-exito"><%= mensaje %></div>
-<% } %>
-<% if (error) { %>
-    <div class="alerta alerta-error"><%= error %></div>
-<% } %>
+<link rel="stylesheet" href="/css/dashboard.css">
 
 <main class="main">
-        <header>
-            <div>
-                <h1>Bienvenido, Prof. Alejandro</h1>
-                <p style="color: #64748B;">Resumen académico detallado de la institución.</p>
-            </div>
-            <div style="background: white; padding: 10px 20px; border-radius: 15px; border: 1px solid #E2E8F0; display: flex; align-items: center; gap: 15px;">
-                <img src="https://randomuser.me/api/portraits/men/32.jpg" style="width: 40px; border-radius: 10px;">
-                <span style="font-weight: 700;">Alejandro G.</span>
-            </div>
-        </header>
+    <header>
+        <div>
+            <h1>Bienvenido, Prof. <%= usuario.nombre %></h1>
+            <p style="color: #64748B;">Resumen académico detallado de la institución.</p>
+        </div>
+    </header>
 
-        <section class="inst-card">
-            <h2>Colegio San Francisco de Asís</h2>
-            <div class="inst-grid">
-                <img src="" alt="">
-                <div class="inst-item">
-                    <h4>Nuestra Misión</h4>
-                    <p>Formar líderes con valores franciscanos y excelencia técnica.</p>
-                </div>
-                <div class="inst-item">
-                    <h4>Visión 2025</h4>
-                    <p>Ser el referente regional en educación bilingüe e innovación.</p>
-                </div>
-            </div>
-            <button class="btn-history" onclick="toggleHistory()">Ver Institución</button>
-        </section>
+    <section class="inst-card">
+        <h2>Colegio San Francisco de Asís</h2>
 
-        <div id="history-panel">
-            <h3 style="color: var(--primary); margin-bottom: 15px;">Nuestra Trayectoria</h3>
-            <p style="line-height: 1.7; color: #475569;">Fundado en 1985, el Colegio San Francisco de Asís ha sido pionero en la implementación de metodologías activas de aprendizaje...</p>
+        <div class="inst-grid">
+
+            <div class="inst-item">
+                <h4>Nuestra Misión</h4>
+                <p>Formar estudiantes íntegros con valores sólidos, preparados para enfrentar los desafíos modernos con excelencia académica.</p>
+            </div>
+
+            <div class="inst-item">
+                <h4>Visión 2025</h4>
+                <p>Ser líderes reconocidos en innovación educativa, integrando tecnología de vanguardia para potenciar el aprendizaje.</p>
+            </div>
         </div>
 
-        <h3 style="margin-bottom: 25px;">Noticias Importantes</h3>
-        <div class="news-grid">
-            <article class="n-card n-orange">
-                <img src="https://images.unsplash.com/photo-1564910443496-5fd2d76b47fa?auto=format&fit=crop&w=400" alt="">
+        <button class="btn-history" onclick="toggleHistory()">Ver Institución</button>
+    </section>
+
+    <div id="history-panel">
+        <h3 style="color: var(--primary); margin-bottom: 15px;">Nuestra Trayectoria</h3>
+        <p style="line-height: 1.7; color: #475569;">
+            Fundado en 1985, el Colegio San Francisco de Asís ha sido pionero en la implementación
+            de metodologías activas de aprendizaje...
+        </p>
+    </div>
+
+    <h3 style="margin-bottom: 25px;">Noticias Importantes</h3>
+
+    <div class="news-grid">
+
+        <article class="n-card n-orange">
+            <img src="https://images.unsplash.com/photo-1564910443496-5fd2d76b47fa?auto=format&fit=crop&w=400">
+            <div class="texto">
                 <span style="font-weight: 800; font-size: 11px; color: var(--p-orange-text); margin-bottom: 5px;">CIENCIA</span>
                 <h4>Feria Robótica 2025</h4>
                 <p>Inscripciones abiertas para el torneo regional de drones.</p>
-            </article>
-
-            <article class="n-card n-green">
-                <img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=400" alt="">
-                <span style="font-weight: 800; font-size: 11px; color: var(--p-green-text); margin-bottom: 5px;">DEPORTES</span>
-                <h4>Final Regional</h4>
-                <p>Nuestro equipo de fútbol busca el bicampeonato este viernes.</p>
-            </article>
-
-            <article class="n-card n-purple">
-                <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=400" alt="">
-                <span style="font-weight: 800; font-size: 11px; color: var(--p-purple-text); margin-bottom: 5px;">ACADÉMICO</span>
-                <h4>Biblioteca 2.0</h4>
-                <p>Nuevos recursos digitales disponibles en la plataforma Klassy.</p>
-            </article>
-
-            <article class="n-card n-pink">
-                <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=400" alt="">
-                <span style="font-weight: 800; font-size: 11px; color: var(--p-pink-text); margin-bottom: 5px;">COMUNIDAD</span>
-                <h4>Día del Estudiante</h4>
-                <p>Gran jornada recreativa y cultural en el patio central.</p>
-            </article>
-        </div>
-
-        <div class="bottom-section">
-            <div class="glass-card">
-                <h3>Gobierno Escolar</h3>
-                <div class="gov-list">
-                    <div class="person-item">
-                        <div class="avatar-frame"><img src="https://randomuser.me/api/portraits/women/44.jpg"></div>
-                        <div style="font-weight: 700;">Lucía Méndez</div>
-                        <div style="color: var(--primary); font-size: 13px; font-weight: 600;">Personera</div>
-                    </div>
-                    <div class="person-item">
-                        <div class="avatar-frame"><img src="https://randomuser.me/api/portraits/men/32.jpg"></div>
-                        <div style="font-weight: 700;">Carlos Ruiz</div>
-                        <div style="color: var(--primary); font-size: 13px; font-weight: 600;">Contralor</div>
-                    </div>
+                <p>Los estudiantes de todos los grados pueden inscribir sus proyectos para la feria anual. ¡Prepárate!</p>
+                <div class="n-footer">
+                    <span>Hace 2 días</span>
+                    <span class="tag tag-orange">EVENTOS</span>
                 </div>
             </div>
 
-            <div class="glass-card">
-                <h3>Proyectos 2026</h3>
-                <div style="margin-top: 20px;">
-                    <div class="proj-item" onclick="this.classList.toggle('active')">
-                        <div class="proj-header">
-                            <span style="font-weight: 700;">Eco-Escuela</span>
-                            <svg class="icon-box" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-                        </div>
-                        <div class="proj-info">Implementación de paneles solares y huertas orgánicas para un campus 100% autosostenible.</div>
-                    </div>
+        </article>
 
-                    <div class="proj-item" onclick="this.classList.toggle('active')" style="border-left-color: var(--p-orange-text);">
-                        <div class="proj-header">
-                            <span style="font-weight: 700;">Bilingüismo 2026</span>
-                            <svg class="icon-box" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-                        </div>
-                        <div class="proj-info">Certificación internacional Cambridge para todos los grados de bachillerato técnico.</div>
-                    </div>
-
-                    <div class="proj-item" onclick="this.classList.toggle('active')" style="border-left-color: var(--p-purple-text);">
-                        <div class="proj-header">
-                            <span style="font-weight: 700;">Código Joven</span>
-                            <svg class="icon-box" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-                        </div>
-                        <div class="proj-info">Taller avanzado de Python y desarrollo de Apps móviles para fortalecer el perfil técnico Sena.</div>
-                    </div>
-                </div>
-            </div>
+        <article class="n-card n-green">
+    <img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=400">
+    
+    <div class="texto">
+        <span style="font-weight: 800; font-size: 11px; color: var(--p-green-text); margin-bottom: 5px;">DEPORTES</span>
+        
+        <h4>Final Regional</h4>
+        
+        <p>Nuestro equipo de fútbol busca el bicampeonato este viernes.</p>
+        
+        <p>El partido se disputará en el estadio municipal y contará con la participación de instituciones de toda la región.</p>
+        
+        <div class="n-footer">
+            <span>Hace 4 días</span>
+            <span class="tag tag-green">DEPORTES</span>
         </div>
-    </main>
+    </div>
+
+</article>
+
+
+<article class="n-card n-purple">
+    <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=400">
+    
+    <div class="texto">
+        <span style="font-weight: 800; font-size: 11px; color: var(--p-purple-text); margin-bottom: 5px;">ACADÉMICO</span>
+        
+        <h4>Biblioteca 2.0</h4>
+        
+        <p>Nuevos recursos digitales disponibles en la plataforma Klassy.</p>
+        
+        <p>Los estudiantes podrán acceder a libros, artículos científicos y material multimedia desde cualquier dispositivo.</p>
+        
+        <div class="n-footer">
+            <span>Hace 1 semana</span>
+            <span class="tag tag-purple">ACADÉMICO</span>
+        </div>
+    </div>
+
+</article>
+
+
+<article class="n-card n-pink">
+    <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=400">
+    
+    <div class="texto">
+        <span style="font-weight: 800; font-size: 11px; color: var(--p-pink-text); margin-bottom: 5px;">COMUNIDAD</span>
+        
+        <h4>Día del Estudiante</h4>
+        
+        <p>Gran jornada recreativa y cultural en el patio central.</p>
+        
+        <p>Se realizarán actividades deportivas, presentaciones artísticas y concursos para todos los grados.</p>
+        
+        <div class="n-footer">
+            <span>Hace 2 semanas</span>
+            <span class="tag tag-blue">EVENTO</span>
+        </div>
+    </div>
+
+</article>
+
+    </div>
+
+    
+</main>
+
+
 
     <script>
         function toggleHistory() {
             document.getElementById('history-panel').classList.toggle('show');
         }
     </script>
-    
+
 <%- include('../parciales/pie') %>
