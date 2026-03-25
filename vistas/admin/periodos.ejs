@@ -46,13 +46,13 @@
                                 </td>
                                 <td>
                                     <div class="acciones">
-                                        <button onclick="editarPeriodo('<%= periodo._id %>', '<%= periodo.nombre %>', <%= periodo.numero %>, '<%= periodo.anioEscolar %>', '<%= periodo.fechaInicio.toISOString().split('T')[0] %>', '<%= periodo.fechaFin.toISOString().split('T')[0] %>', <%= periodo.activo %>)" class="editar">
-                                            Editar
-                                        </button>
-                                        <button onclick="confirmarEliminar('¿Seguro que deseas eliminar este período?', '/admin/periodos/eliminar/<%= periodo._id %>')" class="eliminar">
-                                            Eliminar
-                                        </button>
-                                    </div>
+    <button onclick="editarPeriodo('<%= periodo._id %>', '<%= periodo.nombre %>', <%= periodo.numero %>, '<%= periodo.anioEscolar %>', '<%= periodo.fechaInicio.toISOString().split('T')[0] %>', '<%= periodo.fechaFin.toISOString().split('T')[0] %>', <%= periodo.activo %>)" class="btn-icon editar">
+        <i class="fas fa-pencil-alt"></i>
+    </button>
+    <button onclick="confirmarEliminar('¿Seguro que deseas eliminar este período?', '/admin/periodos/eliminar/<%= periodo._id %>')" class="btn-icon eliminar">
+        <i class="fas fa-trash-alt"></i>
+    </button>
+</div>
                                 </td>
                             </tr>
                         <% }); %>
@@ -178,6 +178,38 @@
         document.getElementById('editFechaFin').value = fechaFin;
         document.getElementById('editActivo').checked = activo;
         abrirModal('modalEditarPeriodo');
+    }
+</script>
+<script>
+    // Tu lógica original de llenado de datos
+    function editarPeriodo(id, nombre, numero, anioEscolar, fechaInicio, fechaFin, activo) {
+        document.getElementById('formEditarPeriodo').action = '/admin/periodos/editar/' + id;
+        document.getElementById('editNombre').value = nombre;
+        document.getElementById('editNumero').value = numero;
+        document.getElementById('editAnioEscolar').value = anioEscolar;
+        document.getElementById('editFechaInicio').value = fechaInicio;
+        document.getElementById('editFechaFin').value = fechaFin;
+        document.getElementById('editActivo').checked = (activo === true || activo === "true" || activo === 1);
+        
+        abrirModal('modalEditarPeriodo');
+    }
+
+    // Funciones esenciales para que funcionen los botones onclick
+    function abrirModal(id) {
+        const modal = document.getElementById(id);
+        if(modal) modal.style.display = 'flex';
+    }
+
+    function cerrarModal(id) {
+        const modal = document.getElementById(id);
+        if(modal) modal.style.display = 'none';
+    }
+
+    // Cerrar modal si se hace clic fuera del contenido
+    window.onclick = function(event) {
+        if (event.target.className === 'modal-fondo') {
+            event.target.style.display = 'none';
+        }
     }
 </script>
 

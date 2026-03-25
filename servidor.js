@@ -1,4 +1,3 @@
-
 //////////////////////
 /*si va a ejecutar esto por primera vez, asegurese sahira y jessica de ejecutar 
 el siguiente comando node scripts/inicializar-db.js para que no les vaya a botar error*/
@@ -89,6 +88,18 @@ app.use('/', rutasAutenticacion);
 const rutasAdmin = require('./rutas/admin');
 app.use('/admin', rutasAdmin);
 
+// Rutas del docente
+const rutasDocente = require('./rutas/docente');
+app.use('/docente', rutasDocente);
+
+// Rutas del alumno
+const rutasAlumno = require('./rutas/alumno');
+app.use('/alumno', rutasAlumno);
+
+// Rutas del director
+const rutasDirector = require('./rutas/director');
+app.use('/director', rutasDirector);
+
 
 // /////////////////////////////////////////
 // PÁGINA PRINCIPAL
@@ -115,7 +126,7 @@ app.use((req, res) => {
     res.status(404).render('error', { 
         mensaje: 'Página no encontrada',
         codigo: 404
-    });
+    });  
 });
 
 // ========================================

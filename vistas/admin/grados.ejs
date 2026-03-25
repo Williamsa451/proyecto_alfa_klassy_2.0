@@ -1,6 +1,5 @@
 <%- include('../parciales/encabezado') %>
 
-<!-- Mensajes -->
 <% if (mensaje) { %>
     <div class="alerta alerta-exito"><%= mensaje %></div>
 <% } %>
@@ -8,12 +7,13 @@
     <div class="alerta alerta-error"><%= error %></div>
 <% } %>
 
-<!-- Tarjeta principal -->
+
 <div class="tarjeta">
     <div class="tarjeta-encabezado">
         <h2>Lista de Grados</h2>
         <button onclick="abrirModal('modalCrearGrado')" class="boton boton-primario boton-pequeno">
-            + Nuevo Grado
+<!-- Tarjeta principal -->
+            <i class="fas fa-plus"></i> Nuevo Grado
         </button>
     </div>
     <div class="tarjeta-cuerpo">
@@ -46,11 +46,11 @@
                                 </td>
                                 <td>
                                     <div class="acciones">
-                                        <button onclick="editarGrado('<%= grado._id %>', '<%= grado.nombre %>', '<%= grado.seccion %>', '<%= grado.nivel %>', '<%= grado.anioEscolar %>', '<%= grado.capacidad %>', <%= grado.activo %>)" class="editar">
-                                            Editar
+                                        <button onclick="editarGrado('<%= grado._id %>', '<%= grado.nombre %>', '<%= grado.seccion %>', '<%= grado.nivel %>', '<%= grado.anioEscolar %>', '<%= grado.capacidad %>', <%= grado.activo %>)" class="btn-icon editar" title="Editar">
+                                            <i class="fas fa-edit"></i> 
                                         </button>
-                                        <button onclick="confirmarEliminar('¿Seguro que deseas eliminar este grado?', '/admin/grados/eliminar/<%= grado._id %>')" class="eliminar">
-                                            Eliminar
+                                        <button onclick="confirmarEliminar('¿Seguro que deseas eliminar este grado?', '/admin/grados/eliminar/<%= grado._id %>')" class="btn-icon eliminar" title="Eliminar">
+                                            <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -68,8 +68,7 @@
     </div>
 </div>
 
-<!-- Modal para crear grado -->
-<div id="modalCrearGrado" class="modal-fondo">
+<div id="modalCrearGrado" class="modal-fondo" style="display: none;">
     <div class="modal">
         <div class="modal-encabezado">
             <h3>Crear Nuevo Grado</h3>
@@ -84,7 +83,7 @@
                 <div class="fila-campos">
                     <div class="campo">
                         <label for="seccion">Sección *</label>
-                        <input type="text" id="seccion" name="seccion" placeholder="Ej: A, B, C" maxlength="2" required>
+                        <input type="text" id="seccion" name="seccion" placeholder="Ej: A" maxlength="2" required>
                     </div>
                     <div class="campo">
                         <label for="nivel">Nivel *</label>
@@ -98,7 +97,7 @@
                 <div class="fila-campos">
                     <div class="campo">
                         <label for="anioEscolar">Año Escolar *</label>
-                        <input type="text" id="anioEscolar" name="anioEscolar" placeholder="Ej: 2024" required>
+                        <input type="text" id="anioEscolar" name="anioEscolar" required>
                     </div>
                     <div class="campo">
                         <label for="capacidad">Capacidad</label>
@@ -107,17 +106,14 @@
                 </div>
             </div>
             <div class="modal-pie">
-                <button type="button" class="boton" style="background: var(--color-borde);" onclick="cerrarModal('modalCrearGrado')">
-                    Cancelar
-                </button>
+                <button type="button" class="boton" onclick="cerrarModal('modalCrearGrado')">Cancelar</button>
                 <button type="submit" class="boton boton-primario">Crear Grado</button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- Modal para editar grado -->
-<div id="modalEditarGrado" class="modal-fondo">
+<div id="modalEditarGrado" class="modal-fondo" style="display: none;">
     <div class="modal">
         <div class="modal-encabezado">
             <h3>Editar Grado</h3>
@@ -154,15 +150,12 @@
                 </div>
                 <div class="campo">
                     <label>
-                        <input type="checkbox" id="editActivo" name="activo">
-                        Grado Activo
+                        <input type="checkbox" id="editActivo" name="activo"> Grado Activo
                     </label>
                 </div>
             </div>
             <div class="modal-pie">
-                <button type="button" class="boton" style="background: var(--color-borde);" onclick="cerrarModal('modalEditarGrado')">
-                    Cancelar
-                </button>
+                <button type="button" class="boton" onclick="cerrarModal('modalEditarGrado')">Cancelar</button>
                 <button type="submit" class="boton boton-primario">Actualizar Grado</button>
             </div>
         </form>
@@ -170,15 +163,25 @@
 </div>
 
 <script>
+    // Función para manejar la carga de datos en el modal de edición
     function editarGrado(id, nombre, seccion, nivel, anioEscolar, capacidad, activo) {
+        // Actualizamos el action del formulario dinámicamente
         document.getElementById('formEditarGrado').action = '/admin/grados/editar/' + id;
+        
+        // Seteamos los valores en los inputs
         document.getElementById('editNombre').value = nombre;
         document.getElementById('editSeccion').value = seccion;
         document.getElementById('editNivel').value = nivel;
         document.getElementById('editAnioEscolar').value = anioEscolar;
         document.getElementById('editCapacidad').value = capacidad;
-        document.getElementById('editActivo').checked = activo;
-        abrirModal('modalEditarGrado');
+        document.getElementById('editActivo').checked = (activo === true || activo === "true");
+        
+        // Abrimos el modal usando la función global del proyecto
+        if (typeof abrirModal === 'function') {
+            abrirModal('modalEditarGrado');
+        } else {
+            document.getElementById('modalEditarGrado').style.display = 'flex';
+        }
     }
 </script>
 

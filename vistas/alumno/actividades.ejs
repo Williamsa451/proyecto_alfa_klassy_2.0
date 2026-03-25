@@ -1,0 +1,88 @@
+<%- include('../parciales/encabezado') %>
+
+<!-- Mensajes -->
+<% if (mensaje) { %>
+    <div class="alerta alerta-exito"><%= mensaje %></div>
+<% } %>
+<% if (error) { %>
+    <div class="alerta alerta-error"><%= error %></div>
+<% } %>
+
+<!-- Lista de actividades -->
+<div class="tarjeta">
+    <div class="tarjeta-encabezado">
+        <h2>Mis Actividades</h2>
+    </div>
+    <div class="tarjeta-cuerpo">
+        <% if (actividades && actividades.length > 0) { %>
+            <div style="display: grid; gap: 15px;">
+                <% actividades.forEach(function(item) { %>
+                    <div class="actividad-tarjeta" style="border-left: 4px solid 
+                        <% if (item.entrega && item.entrega.estado === 'calificada') { %>
+                            var(--color-exito)
+                        <% } else if (item.entrega) { %>
+                            var(--color-info)
+                        <% } else if (item.vencida) { %>
+                            var(--color-peligro)
+                        <% } else { %>
+                            var(--color-advertencia)
+                        <% } %>
+                    ;">
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div>
+                                <h4 style="margin-bottom: 8px;"><%= item.actividad.titulo %></h4>
+                                <div class="actividad-info">
+                                    <span>
+                                        <svg style="width: 16px; height: 16px;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13" />
+                                        </svg>
+                                        <%= item.actividad.materia ? item.actividad.materia.nombre : 'Sin materia' %>
+                                    </span>
+                                    <span>
+                                        <svg style="width: 16px; height: 16px;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                        Entrega: <%= new Date(item.actividad.fechaLimite).toLocaleDateString('es') %>
+                                    </span>
+                                    <span>
+                                        Puntaje: <%= item.actividad.puntajeMaximo %> pts
+                                    </span>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <% if (item.entrega && item.entrega.estado === 'calificada') { %>
+                                    <span class="estado estado-activo">Calificada</span>
+                                    <div style="margin-top: 5px;">
+                                        <span class="nota-valor <%= item.entrega.calificacion >= 60 ? 'nota-aprobada' : 'nota-reprobada' %>">
+                                            <%= item.entrega.calificacion %>/<%= item.actividad.puntajeMaximo %>
+                                        </span>
+                                    </div>
+                                <% } else if (item.entrega) { %>
+                                    <span class="estado estado-pendiente">Entregada</span>
+                                <% } else if (item.vencida) { %>
+                                    <span class="estado estado-inactivo">Vencida</span>
+                                <% } else { %>
+                                    <span class="estado estado-pendiente">Pendiente</span>
+                                <% } %>
+                            </div>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <a href="/alumno/actividades/<%= item.actividad._id %>" class="boton boton-pequeno boton-primario">
+                                Ver Detalles
+                            </a>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <div class="sin-datos">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                <p>No hay actividades asignadas</p>
+            </div>
+        <% } %>
+    </div>
+</div>
+
+<%- include('../parciales/pie') %>

@@ -5,59 +5,283 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Klassy - <%= titulo %></title>
     <link rel="stylesheet" href="/css/estilos.css">
+    <style>
+        :root {
+            --primary-blue: #4a8df8;
+            --text-dark: #333;
+            --bg-light: #f8fafc;
+            --pink:   #FF8FAB;
+            --coral:  #FF6B6B;
+            --blue:   #A8D8F0;
+            --yellow: #FFD95A;
+            --mint:   #B5EAD7;
+            --white:  #FDFCFA;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-light);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        main {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Elementos Decorativos: Manchas */
+        .mancha {
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%; 
+            filter: blur(40px);
+            z-index: 0;
+            opacity: 0.4;       
+        }
+        .azul { background-color: #73bdfe; top: 0%; left: -2%; }
+        .amarillo { background-color: #fff3b0; top: 15%; right: 15%; width: 200px; height: 200px; }
+        .aqua { background-color: rgb(121, 252, 252); top: 80%; left: 5%; }
+        .verde { background-color: #97fcb4; top: 60%; right: 0%; width: 280px; height: 280px; }
+
+        /* Contenedor Principal (Grid) */
+        .principal {
+            display: grid;
+            grid-template-columns: 1fr 1px 1fr;
+            align-items: center;
+            gap: 40px;
+            height: 75%;
+            width: 80%;
+            max-width: 900px;
+            padding: 50px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(80,182,255,.2);
+            z-index: 10;
+            position: relative;
+        }
+
+        /* Sección Izquierda: Títulos */
+        #titulos { text-align: left; }
+        #titulos h1 { font-size: 2.4rem; margin-bottom: 10px; color: var(--text-dark); }
+        #titulos h3 { color: var(--primary-blue); margin-bottom: 20px; }
+        #titulos p { color: var(--text-dark); line-height: 1.6; }
+        .beneficios { margin-top: 15px; font-weight: 500; }
+
+        .divider { width: 1px; height: 80%; background: #e4e4e4; }
+
+        /* Sección Derecha: Formulario */
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            max-width: 280px;
+            margin: auto;
+        }
+        .login-form h2 { text-align: center; margin-bottom: 10px; font-size: 1.5rem; }
+
+        .input-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #ccc;
+            padding: 8px 0;
+        }
+        .input-group input {
+            border: none;
+            outline: none;
+            width: 100%;
+            padding: 8px 0 8px 30px;
+            background: none;
+            font-size: 14px;
+        }
+        .input-group label {
+            position: absolute;
+            left: 30px;
+            color: #888;
+            font-size: 14px;
+            transition: .3s;
+            pointer-events: none;
+        }
+        .input-group input:focus + label,
+        .input-group input:not(:placeholder-shown) + label {
+            top: -12px;
+            left: 0;
+            font-size: 12px;
+            color: var(--primary-blue);
+        }
+        .icon { position: absolute; left: 0; font-size: 14px; color: #888; }
+
+        /* Alertas EJS */
+        .alerta-error {
+            background-color: #fee2e2;
+            color: #dc2626;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        /* Botón y Extras */
+        .login-form button {
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(45deg, #4a8df8, #3a6ed8);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .3s;
+        }
+        .login-form button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(74,141,248,.3);
+        }
+        .extras { text-align: right; font-size: 13px; }
+        .extras a { text-decoration: none; color: var(--primary-blue); }
+
+        /* Olas Animadas */
+        .waves {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 15vh;
+            z-index: 1;
+            border-radius: 0 0 20px 20px;
+        }
+        .parallax > use { animation: move-forever 25s cubic-bezier(.55,.5,.45,.5) infinite; }
+        .parallax > use:nth-child(1) { animation-delay: -2s; animation-duration: 7s; fill: rgba(74, 141, 248, 0.7); }
+        .parallax > use:nth-child(2) { animation-delay: -3s; animation-duration: 10s; fill: rgba(74, 141, 248, 0.5); }
+        .parallax > use:nth-child(3) { animation-delay: -4s; animation-duration: 13s; fill: rgba(74, 141, 248, 0.3); }
+        .parallax > use:nth-child(4) { animation-delay: -5s; animation-duration: 20s; fill: var(--primary-blue); }
+
+        @keyframes move-forever {
+            0% { transform: translate3d(-90px,0,0); }
+            100% { transform: translate3d(85px,0,0); }
+        }
+
+        /* Tags Flotantes */
+        .subject-tag {
+            position: absolute;
+            z-index: 2;
+            font-size: .68rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 100px;
+            animation: movimientoInfinito 5s ease-in-out infinite;
+        }
+        @keyframes movimientoInfinito {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        .tag-math { background: var(--yellow); top: 7%; left: 5%; }
+        .tag-sci  { background: var(--mint); top: 14%; right: 6%; }
+        .tag-lit  { background: var(--pink); bottom: 18%; left: 6%; }
+        .tag-hist { background: var(--blue); bottom: 12%; right: 8%; }
+
+        nav {
+            position: absolute;
+            top: 0;
+            width: 90%;
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            z-index: 20;
+        }
+        .logo-nav { font-weight: bold; color: #333; }
+    </style>
 </head>
 <body>
-    <div class="login-pagina">
-        <div class="login-contenedor">
-            <!-- Logo -->
-            <div class="login-logo">
-                <h1>Klassy</h1>
-                <p>Gestor Académico</p>
-            </div>
+    <nav>
+        <div class="logo-nav">
+            <span style="color:var(--primary-blue)">✦</span> KLASSY
+        </div>
+    </nav>
 
-            <!-- Mensaje de error -->
-            <% if (error) { %>
-                <div class="alerta alerta-error">
-                    <%= error %>
-                </div>
-            <% } %>
+    <main>
+        <div class="mancha azul"></div>
+        <div class="mancha amarillo"></div>
+        <div class="mancha aqua"></div>
+        <div class="mancha verde"></div>
 
-            <!-- Formulario de login -->
-            <form class="login-formulario" action="/login" method="POST">
-                <div class="campo">
-                    <label for="correo">Correo Electrónico</label>
-                    <input 
-                        type="email" 
-                        id="correo" 
-                        name="correo" 
-                        placeholder="tu@correo.com"
-                        required
-                    >
-                </div>
+        <div class="subject-tag tag-math">📐Matemáticas</div>
+        <div class="subject-tag tag-sci">🔬Ciencias</div>
+        <div class="subject-tag tag-lit">📚Literatura</div>
+        <div class="subject-tag tag-hist">📜Historia</div>
 
-                <div class="campo">
-                    <label for="contrasena">Contraseña</label>
-                    <input 
-                        type="password" 
-                        id="contrasena" 
-                        name="contrasena" 
-                        placeholder="Tu contraseña"
-                        required
-                    >
-                </div>
-
-                <button type="submit" class="boton boton-primario">
-                    Iniciar Sesión
-                </button>
-            </form>
-
-            <!-- Información de prueba -->
-            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #E5E7EB; text-align: center;">
-                <p style="color: #6B7280; font-size: 12px;">
-                    Sistema de gestión para instituciones educativas
+        <section class="principal">
+            <div id="titulos">
+                <h1>Bienvenid@ a Klassy</h1>
+                <h3>"Tu progreso, en tiempo real"</h3>
+                <p>Una plataforma de gestión académica inteligente.</p>
+                <p class="beneficios">
+                    ✔ Gestión académica <br>
+                    ✔ Actividades y notas <br>
+                    ✔ Predicción con IA
                 </p>
             </div>
-        </div>
-    </div>
+
+            <div class="divider"></div>
+
+            <div class="login-lado-derecho">
+                <% if (error) { %>
+                    <div class="alerta-error">
+                        <%= error %>
+                    </div>
+                <% } %>
+
+                <form class="login-form" action="/login" method="POST">
+                    <h2>Iniciar sesión</h2>
+                    
+                    <div class="input-group">
+                        <span class="icon">✉</span>
+                        <input type="email" id="correo" name="correo" placeholder=" " required>
+                        <label for="correo">Correo electrónico</label>
+                    </div>
+
+                    <div class="input-group">
+                        <span class="icon">🔒</span>
+                        <input type="password" id="contrasena" name="contrasena" placeholder=" " required>
+                        <label for="contrasena">Contraseña</label>
+                    </div>
+
+                    <div class="extras">
+                        <a href="#">¿Olvidaste tu contraseña?</a>
+                    </div>
+
+                    <button type="submit">Entrar al Sistema</button>
+                    
+                    <p style="text-align:center; font-size: 13px;">
+                        ¿No tienes cuenta? <a href="#" style="color:var(--primary-blue); font-weight:bold; text-decoration:none;">Crear cuenta</a>
+                    </p>
+                </form>
+            </div>
+            <svg class="waves" xmlns="http://www.w3.org/2000/svg" viewBox="0 24 150 28" preserveAspectRatio="none">
+                <defs>
+                    <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+                </defs>
+                <g class="parallax">
+                    <use href="#gentle-wave" x="48" y="0" />
+                    <use href="#gentle-wave" x="48" y="3" />
+                    <use href="#gentle-wave" x="48" y="5" />
+                    <use href="#gentle-wave" x="48" y="7" />
+                </g>
+            </svg>
+        </section>
+
+    </main>
 </body>
 </html>

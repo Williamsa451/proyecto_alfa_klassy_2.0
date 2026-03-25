@@ -1,6 +1,17 @@
 <%- include('../parciales/encabezado') %>
 
-<!-- Mensajes -->
+<div id="modalEditar" class="modal-overlay">
+    <div class="modal-contenido">
+        <div class="modal-header">
+            <h3>Editar Usuario</h3>
+            <button onclick="cerrarModal('modalEditar')" class="btn-cerrar">&times;</button>
+        </div>
+        <div id="contenedorFormulario">
+            <p style="padding: 20px; text-align: center;">Cargando datos del usuario...</p>
+        </div>
+    </div>
+</div>
+
 <% if (mensaje) { %>
     <div class="alerta alerta-exito"><%= mensaje %></div>
 <% } %>
@@ -8,7 +19,6 @@
     <div class="alerta alerta-error"><%= error %></div>
 <% } %>
 
-<!-- Tarjeta principal -->
 <div class="tarjeta">
     <div class="tarjeta-encabezado">
         <h2>Lista de Usuarios</h2>
@@ -18,8 +28,25 @@
     </div>
     <div class="tarjeta-cuerpo">
         <% if (usuarios.length > 0) { %>
+            <div class="filtros-contenedor">
+                <div class="busqueda-grupo">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="buscarUsuario" placeholder="Buscar por nombre o documento...">
+                </div>
+                
+                <div class="select-grupo">
+                    <select id="filtrarRol">
+                        <option value="">Todos los roles</option>
+                        <option value="alumno">Estudiante</option>
+                        <option value="docente">Docente</option>
+                        <option value="director">Director</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+            </div>
+
             <div class="tabla-contenedor">
-                <table class="tabla">
+                <table class="tabla" id="tablaUsuarios">
                     <thead>
                         <tr>
                             <th>Nombre</th>
@@ -27,7 +54,7 @@
                             <th>Documento</th>
                             <th>Rol</th>
                             <th>Estado</th>
-                            <th>Acciones</th>
+                            <th style="text-align: center;">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,17 +63,19 @@
                                 <td><%= usr.nombre %></td>
                                 <td><%= usr.correo %></td>
                                 <td><%= usr.documento %></td>
-                                <td style="text-transform: capitalize;"><%= usr.rol %></td>
+                                <td class="rol-celda" style="text-transform: capitalize;"><%= usr.rol %></td>
                                 <td>
-                                    <span class="estado <%= usr.activo ? 'estado-activo' : 'estado-inactivo' %>">
+                                    <span class="estado <%= usr.activo ? 'estado-publicado' : 'estado-programado' %>">
                                         <%= usr.activo ? 'Activo' : 'Inactivo' %>
                                     </span>
                                 </td>
                                 <td>
                                     <div class="acciones">
-                                        <a href="/admin/usuarios/editar/<%= usr._id %>" class="editar">Editar</a>
-                                        <button onclick="confirmarEliminar('¿Seguro que deseas eliminar a <%= usr.nombre %>?', '/admin/usuarios/eliminar/<%= usr._id %>')" class="eliminar">
-                                            Eliminar
+                                        <button onclick="abrirEditar('<%= usr._id %>')" class="btn-icon editar">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </button>
+                                        <button onclick="confirmarEliminar('<%= usr._id %>')" class="btn-icon eliminar" title="Eliminar">
+                                            <i class="fas fa-trash-alt"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -67,4 +96,78 @@
     </div>
 </div>
 
+<script>
+    const inputBusqueda = document.getElementById('buscarUsuario');
+    const selectRol = document.getElementById('filtrarRol');
+    const tabla = document.getElementById('tablaUsuarios');
+
+    function ejecutarFiltros() {
+        const texto = inputBusqueda.value.toLowerCase();
+        const rolSeleccionado = selectRol.value.toLowerCase();
+        const filas = tabla.querySelectorAll('tbody tr');
+
+        filas.forEach(fila => {
+            const nombre = fila.cells[0].textContent.toLowerCase();
+            const documento = fila.cells[2].textContent.toLowerCase();
+            const rolEnFila = fila.cells[3].textContent.toLowerCase();
+
+            const coincideTexto = nombre.includes(texto) || documento.includes(texto);
+            const coincideRol = rolSeleccionado === "" || rolEnFila.includes(rolSeleccionado);
+
+            fila.style.display = (coincideTexto && coincideRol) ? "" : "none";
+        });
+    }
+
+    inputBusqueda.addEventListener('keyup', ejecutarFiltros);
+    selectRol.addEventListener('change', ejecutarFiltros);
+    
+    async function abrirEditar(id) {
+    const modal = document.getElementById('modalEditar');
+    const contenedor = document.getElementById('contenedorFormulario');
+    
+    // 1. Mostrar el modal inmediatamente usando la clase del CSS
+    modal.classList.add('activo'); 
+    contenedor.innerHTML = '<p style="padding: 20px; text-align: center;">Cargando datos...</p>';
+    
+    try {
+        // 2. Fetch con backticks corregidos
+        const respuesta = await fetch(`/admin/usuarios/editar/${id}`);
+        const html = await respuesta.text();
+        
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const formulario = doc.querySelector('.formulario');
+        
+        if (formulario) {
+            contenedor.innerHTML = '';
+            contenedor.appendChild(formulario);
+        } else {
+            throw new Error("No se encontró el formulario en la respuesta");
+        }
+    } catch (error) {
+        console.error(error);
+        contenedor.innerHTML = '<p class="alerta-error">Error al cargar el formulario.</p>';
+    }
+}
+
+// Unificamos la función cerrarModal para que use clases
+function cerrarModal(idModal) {
+    const modal = document.getElementById(idModal);
+    if (modal) {
+        modal.classList.remove('activo');
+    }
+}
+
+// Corregimos el cierre al hacer click fuera
+window.onclick = function(event) {
+    if (event.target.classList.contains('modal-overlay')) {
+        event.target.classList.remove('activo');
+    }
+}
+
+</script>
+
+
 <%- include('../parciales/pie') %>
+
+
